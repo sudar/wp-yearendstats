@@ -10,12 +10,13 @@ Displays some fancy stats about your blog which you can include in your year end
 	
 == Description ==
 
-Displays some fancy stats about your blog which you can include in your year end review posts.Requires [Open Flash Chart Core Plugin][2]
-[2]: http://sudarmuthu.com/wordpress/open-flash-chart-core
+Displays some fancy stats about your blog which you can include in your year end review posts.Requires [Open Flash Chart Core Plugin][2].
+
 
 More information at [http://sudarmuthu.com/wordpress/wp-year-end-stats][1]
 
  [1]: http://sudarmuthu.com/wordpress/wp-year-end-stats
+ [2]: http://sudarmuthu.com/wordpress/open-flash-chart-core
 	
 == Installation ==
 
