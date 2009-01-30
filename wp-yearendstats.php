@@ -4,7 +4,7 @@ Plugin Name: Year End Stats
 Plugin Script: wp-yearendstats.php
 Plugin URI: http://sudarmuthu.com/wordpress/wp-year-end-stats
 Description: Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a> .
-Version: 0.3
+Version: 0.4
 License: GPL
 Author: Sudar
 Author URI: http://sudarmuthu.com/ 
@@ -13,11 +13,8 @@ Author URI: http://sudarmuthu.com/
 2008-01-01 - v0.1 - First Version
 2008-06-08 - v0.2 - Second Version
 2008-12-27 - v0.3 - Third Version
+2009-01-27 - v0.4 - Fourth Version
 */
-
-define('SMYESDIR', dirname(__FILE__) . '/');
-define('SMYESINC', SMYESDIR . 'open-flash-chart-2/'); // Include path
-define('SMYESJS', get_bloginfo("wpurl") . '/wp-content/plugins/wp-yearendstats/open-flash-chart-2/'); // Include URL
 
 /**
  * Display Options page
@@ -133,7 +130,7 @@ if (!function_exists('smyes_print_scripts')) {
             $year_2 = $_POST['year_2'];
             $range = $_POST['range'];
 
-//            require_once SMYESINC . 'php-ofc-library/open-flash-chart.php';
+            // Opne Flash Chart class is available through open flash chart core Plugin
             $chart_1 = new open_flash_chart();
             $chart_2 = new open_flash_chart();
             $chart_3 = new open_flash_chart();
@@ -253,12 +250,13 @@ if (!function_exists('smyes_print_scripts')) {
             $chart_3->set_y_axis($y_axis_3);
             $chart_4->set_y_axis($y_axis_4);
 
+            $include_url = get_option("SM_OFC_INC_URL");
 ?>
 <script type="text/javascript">
-swfobject.embedSWF("<?php echo SMYESJS; ?>open-flash-chart.swf", "posts_chart", "350", "250", "9.0.0", "expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "posts_chart", "loading":"Loading data..."}, {"menu":"false"});
-swfobject.embedSWF("<?php echo SMYESJS; ?>open-flash-chart.swf", "comments_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "comments_chart", "loading":"Loading data..."}, {"menu":"false"});
-swfobject.embedSWF("<?php echo SMYESJS; ?>open-flash-chart.swf", "avg_post_length_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "avg_post_length_chart", "loading":"Loading data..."}, {"menu":"false"});
-swfobject.embedSWF("<?php echo SMYESJS; ?>open-flash-chart.swf", "total_post_length_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "total_post_length_chart", "loading":"Loading data..."}, {"menu":"false"});
+swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "posts_chart", "350", "250", "9.0.0", "expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "posts_chart", "loading":"Loading data..."}, {"menu":"false"});
+swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "comments_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "comments_chart", "loading":"Loading data..."}, {"menu":"false"});
+swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "avg_post_length_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "avg_post_length_chart", "loading":"Loading data..."}, {"menu":"false"});
+swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "total_post_length_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "total_post_length_chart", "loading":"Loading data..."}, {"menu":"false"});
 </script>
 
 <script type="text/javascript">
