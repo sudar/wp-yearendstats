@@ -4,7 +4,7 @@ Plugin Name: Year End Stats
 Plugin Script: wp-yearendstats.php
 Plugin URI: http://sudarmuthu.com/wordpress/wp-year-end-stats
 Description: Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a> .
-Version: 0.4
+Version: 0.4.1
 License: GPL
 Author: Sudar
 Author URI: http://sudarmuthu.com/ 
@@ -14,6 +14,7 @@ Author URI: http://sudarmuthu.com/
 2008-06-08 - v0.2 - Second Version
 2008-12-27 - v0.3 - Third Version
 2009-01-27 - v0.4 - Fourth Version
+2013-02-09 - v0.4.1 - Minor typo fixes
 */
 
 /**
