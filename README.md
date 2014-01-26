@@ -27,7 +27,7 @@ The plugin currently supports the following stats
 - Total number of comments per year
 - Total number of words written per year
 - Average length of posts per year
-	
+
 ### TODO
 
 The following are the features that I am thinking of adding to the Plugin, when I get some free time. If you have any feature request or want to increase the priority of a particular feature, then let me know.
@@ -40,7 +40,7 @@ The following are the features that I am thinking of adding to the Plugin, when 
 ### Support
 
 - If you have found a bug/issue or have a feature request, then post them in [github issues][7]
-- If you have a question about usage or need help to troubleshoot, then post in WordPress forums or leave a comment in [Plugins's home page][1]
+- If you have a question about usage or need help to troubleshoot, then post in WordPress forums or leave a comment in [plugins's home page][1]
 - If you like the Plugin, then kindly leave a review/feedback at [WordPress repo page][8].
 - If you find this Plugin useful or and wanted to say thank you, then there are ways to [make me happy](http://sudarmuthu.com/if-you-wanna-thank-me) :) and I would really appreciate if you can do one of those.
 - Checkout other [WordPress Plugins][5] that I have written
@@ -50,9 +50,13 @@ The following are the features that I am thinking of adding to the Plugin, when 
  [3]: http://twitter.com/sudarmuthu
  [4]: http://sudarmuthu.com/blog
  [5]: http://sudarmuthu.com/wordpress
- [6]: https://github.com/sudar/wp-year-end-stats
- [7]: https://github.com/sudar/wp-year-end-stats/issues
- [8]: http://wordpress.org/extend/plugins/wp-year-end-stats/
+ [6]: https://github.com/sudar/wp-yearendstats
+ [7]: https://github.com/sudar/wp-yearendstats/issues
+ [8]: http://wordpress.org/extend/plugins/wp-yearendstats/
+
+### Credits
+
+Thanks to Alex King for his [blog stats SQL scripts](http://alexking.org/blog/2007/01/01/sql-for-blog-stats) and for the [inspiration](http://alexking.org/blog/2007/12/31/2007-in-review).
 
 ## Installation ##
 
