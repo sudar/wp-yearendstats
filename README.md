@@ -2,9 +2,9 @@
 **Contributors:** sudar  
 **Tags:** stats, comments, posts  
 **Requires at least:** 2.0  
-**Tested up to:** 3.5.1  
+**Tested up to:** 3.8.1  
 **Donate Link:** http://sudarmuthu.com/if-you-wanna-thank-me  
-**Stable tag:** 0.4.1  
+**Stable tag:** 0.5  
 	
 Displays some fancy stats about your blog which you can include in your year end review posts. 
 	
