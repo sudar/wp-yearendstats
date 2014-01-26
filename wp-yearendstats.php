@@ -343,7 +343,7 @@ function smyes_get_num_posts( $year ) {
    
     return $wpdb->get_var( 
         $wpdb->prepare( 
-            "SELECT COUNT(*) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish'", 
+            "SELECT COUNT(*) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'", 
             "$year-01-01",
             "$next_year-01-01" 
         )
@@ -381,7 +381,7 @@ function smyes_get_post_avg_length( $year ) {
    
     return $wpdb->get_var( 
         $wpdb->prepare( 
-            "SELECT AVG(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish'", 
+            "SELECT AVG(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'", 
             "$year-01-01",
             "$next_year-01-01" 
         )
@@ -400,7 +400,7 @@ function smyes_get_post_total_length( $year ) {
    
     return $wpdb->get_var( 
         $wpdb->prepare( 
-            "SELECT SUM(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish'", 
+            "SELECT SUM(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'", 
             "$year-01-01",
             "$next_year-01-01" 
         )
