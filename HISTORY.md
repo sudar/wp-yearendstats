@@ -1,5 +1,8 @@
 ## Changelog ##
 
+### 2014-01-26 - v0.5.1 - (Dev time: 0.5 hour) ###
+- Fix: There was some problem in the version. This is just to bump up version number
+
 ### 2014-01-26 - v0.5 - (Dev time: 2 hours) ###
 - Fix: Fix all warnings and undefined notices (issue #1)
 - Tweak: Count only posts from "post" post type (issue #2)

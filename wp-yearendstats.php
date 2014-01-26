@@ -4,7 +4,7 @@ Plugin Name: Year End Stats
 Plugin Script: wp-yearendstats.php
 Plugin URI: http://sudarmuthu.com/wordpress/wp-year-end-stats
 Description: Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a> .
-Version: 0.5
+Version: 0.5.1
 License: GPL
 Author: Sudar
 Author URI: http://sudarmuthu.com/ 
@@ -440,7 +440,7 @@ if (!function_exists("smyes_check_dependency")) {
     function smyes_check_dependency() {
         // if Open Flash Charts API Core plugin is not installed then de-activate
         if (!class_exists('open_flash_chart')) {
-            echo "<div class = 'updated'><p>ERROR! <strong>WP Year End Stats</strong> Plugin requires <a href = 'http://sudarmuthu.com/wordpress/'>Open Flash Chart Core Plugin</a>. Please install it and then activate <strong>WP Year End Stats</strong> Plugin.</p></div>";
+            echo "<div class = 'updated'><p>ERROR! <strong>WP Year End Stats</strong> Plugin requires <a href = 'http://sudarmuthu.com/wordpress/open-flash-chart-core'>Open Flash Chart Core Plugin</a>. Please install it and then activate <strong>WP Year End Stats</strong> Plugin.</p></div>";
             deactivate_plugins('wp-yearendstats/wp-yearendstats.php'); // Deactivate ourself
 
             // add deactivated Plugin to the recently activated list
