@@ -59,11 +59,11 @@ if (!function_exists('smyes_displayOptions')) {
         }
 ?>
     <div class="wrap">
-        <h2><?php _e( 'Year end stats' ); ?></h2>
+        <h2><?php _e( 'Year end stats' , 'wp-yearendstats'); ?></h2>
         
         <form name="smyes_form" method="post">
 
-        <h3><?php _e( 'Select year range' ); ?></h3>
+        <h3><?php _e( 'Select year range' , 'wp-yearendstats'); ?></h3>
 
         <select id = "year_1" name="year_1">
 <?php
@@ -76,8 +76,8 @@ if (!function_exists('smyes_displayOptions')) {
         </select>
 
         <select id = "range" name="range">
-            <option value="to"  <?php if ($range == "to")  print ('selected') ?>><?php _e(' To' ); ?></option>
-            <option value="and" <?php if ($range == "and") print ('selected') ?>><?php _e( 'And' ); ?></option>
+            <option value="to"  <?php if ($range == "to")  print ('selected') ?>><?php _e(' To' , 'wp-yearendstats'); ?></option>
+            <option value="and" <?php if ($range == "and") print ('selected') ?>><?php _e( 'And' , 'wp-yearendstats'); ?></option>
         </select>
 
         <select id = "year_2" name="year_2">
@@ -90,7 +90,7 @@ if (!function_exists('smyes_displayOptions')) {
 ?>
         </select>
         <p style="border:0;" class = "submit">
-        <input type="submit" value="<?php _e( 'Get Stats'); ?> &raquo;">
+        <input type="submit" value="<?php _e( 'Get Stats', 'wp-yearendstats'); ?> &raquo;">
         </p>
 		<input type="hidden" name="smyes_action" value="getstats" />
         </form>
@@ -102,21 +102,21 @@ if (!function_exists('smyes_displayOptions')) {
 		        <tr valign="top">
                     <td>
                         <div id = "posts_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('posts_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('posts_chart');"></p>
                     </td>
                     <td>
                         <div id = "comments_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('comments_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('comments_chart');"></p>
                     </td>
 			    </tr>
 			    <tr>	
                     <td>
                         <div id = "avg_post_length_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('avg_post_length_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('avg_post_length_chart');"></p>
                     </td>
                     <td>
                         <div id = "total_post_length_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('total_post_length_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('total_post_length_chart');"></p>
                     </td>
 			    </tr>
 			</tbody>
@@ -198,10 +198,10 @@ if (!function_exists('smyes_print_scripts')) {
             }
 
             // titles
-            $title_1 = new title( __( 'Total number of posts per year' ) );
-            $title_2 = new title( __( 'Total number of comments per year' ) );
-            $title_3 = new title( __( 'Average length of posts per year' ) );
-            $title_4 = new title( __( 'Total length of all posts per year' ) );
+            $title_1 = new title( __( 'Total number of posts per year' , 'wp-yearendstats') );
+            $title_2 = new title( __( 'Total number of comments per year' , 'wp-yearendstats') );
+            $title_3 = new title( __( 'Average length of posts per year' , 'wp-yearendstats') );
+            $title_4 = new title( __( 'Total length of all posts per year' , 'wp-yearendstats') );
 
             $chart_1->set_title( $title_1 );
             $chart_2->set_title( $title_2 );
@@ -419,7 +419,7 @@ function smyes_get_post_total_length( $year ) {
 if(!function_exists('smyes_add_menu')) {
 	function smyes_add_menu() {
 	    // Add a submenu to the Dashboard:
-	    add_submenu_page( 'index.php', __( 'Year End Stats' ), __( 'Year End Stats' ), 'manage_options', __FILE__, 'smyes_displayOptions' );
+	    add_submenu_page( 'index.php', __( 'Year End Stats' , 'wp-yearendstats'), __( 'Year End Stats' , 'wp-yearendstats'), 'manage_options', __FILE__, 'smyes_displayOptions' );
 	}
 }
 
@@ -462,7 +462,7 @@ function smyes_filter_plugin_actions($links, $file) {
     if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
 
     if( $file == $this_plugin ) {
-        $settings_link = '<a href="index.php?page=wp-yearendstats/wp-yearendstats.php">' . _('Manage') . '</a>';
+        $settings_link = '<a href="index.php?page=wp-yearendstats/wp-yearendstats.php">' . _('Manage', 'wp-yearendstats') . '</a>';
         array_unshift( $links, $settings_link ); // before other links
     }
     return $links;
