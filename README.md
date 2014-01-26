@@ -54,6 +54,11 @@ The following are the features that I am thinking of adding to the Plugin, when 
  [7]: https://github.com/sudar/wp-yearendstats/issues
  [8]: http://wordpress.org/extend/plugins/wp-yearendstats/
 
+## Translation ##
+
+The pot file is available with the Plugin. If you are willing to do translation for the Plugin, 
+use the pot file to create the .po files for your language and let me know.
+
 ### Credits
 
 Thanks to Alex King for his [blog stats SQL scripts](http://alexking.org/blog/2007/01/01/sql-for-blog-stats) and for the [inspiration](http://alexking.org/blog/2007/12/31/2007-in-review).

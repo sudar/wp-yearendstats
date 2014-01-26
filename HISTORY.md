@@ -3,6 +3,7 @@
 ### 2014-01-26 - v0.5 - (Dev time: 2 hours) ###
 - Fix: Fix all warnings and undefined notices (issue #1)
 - Tweak: Count only posts from "post" post type (issue #2)
+- Add: Add support for translation (issue #6)
 
 ### 2013-02-09 - v0.4.1 ###
 - Minor typo fixes

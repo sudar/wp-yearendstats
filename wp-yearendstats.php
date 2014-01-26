@@ -8,6 +8,8 @@ Version: 0.4.1
 License: GPL
 Author: Sudar
 Author URI: http://sudarmuthu.com/ 
+Text Domain: wp-yearendstats
+Domain Path: languages/
 
 === RELEASE NOTES ===
 Check readme file for full release notes
@@ -55,40 +57,40 @@ if (!function_exists('smyes_displayOptions')) {
             $year_2 = 0;
             $range = 0;
         }
-
-		print('<div class="wrap">');
-		print('<h2>Year end stats</h2>');
-        
-        print ('<form name="smyes_form" action="'. get_bloginfo("wpurl") . '/wp-admin/index.php?page=wp-yearendstats/wp-yearendstats.php' .'" method="post">');
 ?>
-        <h3>Select year range</h3>
+    <div class="wrap">
+        <h2><?php _e( 'Year end stats' ); ?></h2>
+        
+        <form name="smyes_form" method="post">
+
+        <h3><?php _e( 'Select year range' ); ?></h3>
 
         <select id = "year_1" name="year_1">
 <?php
-            foreach ($years as $year) {
-                print ('<option value = "' . $year . '" ');
-                if ($year_1 == $year) { print ('selected');}
-                print ('>' . $year . '</option>');
-            }
+        foreach ( $years as $year ) {
+            print ('<option value = "' . $year . '" ');
+            if ($year_1 == $year) { print ('selected');}
+            print ('>' . $year . '</option>');
+        }
 ?>
         </select>
 
         <select id = "range" name="range">
-            <option value="to"  <?php if ($range == "to")  print ('selected') ?>>To</option>
-            <option value="and" <?php if ($range == "and") print ('selected') ?>>And</option>
+            <option value="to"  <?php if ($range == "to")  print ('selected') ?>><?php _e(' To' ); ?></option>
+            <option value="and" <?php if ($range == "and") print ('selected') ?>><?php _e( 'And' ); ?></option>
         </select>
 
         <select id = "year_2" name="year_2">
 <?php
-            foreach ($years as $year) {
-                print ('<option value = "' . $year . '" ');
-                if ($year_2 == $year) { print ('selected');}
-                print ('>' . $year . '</option>');
-            }
+        foreach ($years as $year) {
+            print ('<option value = "' . $year . '" ');
+            if ($year_2 == $year) { print ('selected');}
+            print ('>' . $year . '</option>');
+        }
 ?>
         </select>
         <p style="border:0;" class = "submit">
-            <input type="submit" value="Get Stats &raquo;">
+        <input type="submit" value="<?php _e( 'Get Stats'); ?> &raquo;">
         </p>
 		<input type="hidden" name="smyes_action" value="getstats" />
         </form>
@@ -100,21 +102,21 @@ if (!function_exists('smyes_displayOptions')) {
 		        <tr valign="top">
                     <td>
                         <div id = "posts_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="Save as Image" onclick="save_image('posts_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('posts_chart');"></p>
                     </td>
                     <td>
                         <div id = "comments_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="Save as Image" onclick="save_image('comments_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('comments_chart');"></p>
                     </td>
 			    </tr>
 			    <tr>	
                     <td>
                         <div id = "avg_post_length_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="Save as Image" onclick="save_image('avg_post_length_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('avg_post_length_chart');"></p>
                     </td>
                     <td>
                         <div id = "total_post_length_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="Save as Image" onclick="save_image('total_post_length_chart');"></p>
+                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' ); ?>" onclick="save_image('total_post_length_chart');"></p>
                     </td>
 			    </tr>
 			</tbody>
@@ -122,7 +124,6 @@ if (!function_exists('smyes_displayOptions')) {
 <?php        
 	    }	    
 	    print ('</div>');
-
     }
 }
 
@@ -130,6 +131,11 @@ if (!function_exists('smyes_displayOptions')) {
  * Enqueue Scripts
  */
 function smyes_enqueue_scripts() {
+
+    // Load localization domain
+    $translations = dirname( plugin_basename( __FILE__ ) ) . '/languages/' ;
+    load_plugin_textdomain( 'wp-yearendstats', FALSE, $translations );
+
     if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
        wp_enqueue_script('json');
        wp_enqueue_script('swfobject');
@@ -192,10 +198,10 @@ if (!function_exists('smyes_print_scripts')) {
             }
 
             // titles
-            $title_1 = new title("Total number of posts per year");
-            $title_2 = new title("Total number of comments per year");
-            $title_3 = new title("Average length of posts per year");
-            $title_4 = new title("Total length of all posts per year");
+            $title_1 = new title( __( 'Total number of posts per year' ) );
+            $title_2 = new title( __( 'Total number of comments per year' ) );
+            $title_3 = new title( __( 'Average length of posts per year' ) );
+            $title_4 = new title( __( 'Total length of all posts per year' ) );
 
             $chart_1->set_title( $title_1 );
             $chart_2->set_title( $title_2 );
