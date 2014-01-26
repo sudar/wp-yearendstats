@@ -46,11 +46,15 @@ if (!function_exists('smyes_displayOptions')) {
         
         arsort($years);
 
-	    if ($_POST['smyes_action'] == "getstats") {
+	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
             $year_1 = $_POST['year_1'];
             $year_2 = $_POST['year_2'];
             $range = $_POST['range'];
-	    }
+        } else {
+            $year_1 = 0;
+            $year_2 = 0;
+            $range = 0;
+        }
 
 		print('<div class="wrap">');
 		print('<h2>Year end stats</h2>');
@@ -89,7 +93,7 @@ if (!function_exists('smyes_displayOptions')) {
 		<input type="hidden" name="smyes_action" value="getstats" />
         </form>
 <?php
-	    if ($_POST['smyes_action'] == "getstats") {
+	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
 ?>
 	        <table border="0" class="form-table">
 	        <tbody>
@@ -126,7 +130,7 @@ if (!function_exists('smyes_displayOptions')) {
  * Enqueue Scripts
  */
 function smyes_enqueue_scripts() {
-    if ($_POST['smyes_action'] == "getstats") {
+    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
        wp_enqueue_script('json');
        wp_enqueue_script('swfobject');
     }
@@ -138,7 +142,7 @@ function smyes_enqueue_scripts() {
 if (!function_exists('smyes_print_scripts')) {
     function smyes_print_scripts() {
 
-	    if ($_POST['smyes_action'] == "getstats") {
+	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
             $year_1 = $_POST['year_1'];
             $year_2 = $_POST['year_2'];
             $range = $_POST['range'];
@@ -333,20 +337,17 @@ function save_image(src) {
  * @param Number $year
  * @return Number
  */
-function smyes_get_num_posts($year) {
-   global $wpdb;
-   $prefix = $wpdb->prefix;
-   $year = $wpdb->escape($year);
-   $nextyear = $year + 1;
+function smyes_get_num_posts( $year ) {
+    global $wpdb;
+    $next_year = $year + 1;
    
-    $results = $wpdb->get_results("
-	    SELECT COUNT(*) as count
-		FROM " . $prefix . "posts
-		WHERE post_date >= '$year-01-01'
-		AND post_date < '$nextyear-01-01'
-		AND post_status = 'publish'");
-
-    	return ($results[0]->count);    	
+    return $wpdb->get_var( 
+        $wpdb->prepare( 
+            "SELECT COUNT(*) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish'", 
+            "$year-01-01",
+            "$next_year-01-01" 
+        )
+    );
 }
 
 /**
@@ -355,20 +356,17 @@ function smyes_get_num_posts($year) {
  * @param Number $year
  * @return Number
  */
-function smyes_get_num_comments($year) {
-   global $wpdb;
-   $prefix = $wpdb->prefix;
-   $year = $wpdb->escape($year);
-   $nextyear = $year + 1;
+function smyes_get_num_comments( $year ) {
+    global $wpdb;
+    $next_year = $year + 1;
    
-    $results = $wpdb->get_results("
-		SELECT COUNT(*) as count
-		FROM " . $prefix . "comments
-		WHERE comment_date >= '$year-01-01'
-		AND comment_date < '$nextyear-01-01'
-		AND comment_approved = '1'");
-    
-    	return ($results[0]->count);    	
+    return $wpdb->get_var( 
+        $wpdb->prepare( 
+            "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_date >= %s AND comment_date < %s AND comment_approved = '1'", 
+            "$year-01-01",
+            "$next_year-01-01" 
+        )
+    );
 }
 
 /**
@@ -377,20 +375,17 @@ function smyes_get_num_comments($year) {
  * @param Number $year
  * @return Number
  */
-function smyes_get_post_avg_length($year) {
-   global $wpdb;
-   $prefix = $wpdb->prefix;
-   $year = $wpdb->escape($year);
-   $nextyear = $year + 1;
+function smyes_get_post_avg_length( $year ) {
+    global $wpdb;
+    $next_year = $year + 1;
    
-    $results = $wpdb->get_results("
-		SELECT AVG(LENGTH(post_content)) as avg
-		FROM " . $prefix . "posts
-		WHERE post_date >= '$year-01-01'
-		AND post_date < '$nextyear-01-01'
-		AND post_status = 'publish'    ");
-    
-    	return ($results[0]->avg);
+    return $wpdb->get_var( 
+        $wpdb->prepare( 
+            "SELECT AVG(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish'", 
+            "$year-01-01",
+            "$next_year-01-01" 
+        )
+    );
 }
 
 /**
@@ -399,20 +394,17 @@ function smyes_get_post_avg_length($year) {
  * @param unknown_type $year
  * @return unknown
  */
-function smyes_get_post_total_length($year) {
-   global $wpdb;
-   $prefix = $wpdb->prefix;
-   $year = $wpdb->escape($year);
-   $nextyear = $year + 1;
+function smyes_get_post_total_length( $year ) {
+    global $wpdb;
+    $next_year = $year + 1;
    
-    $results = $wpdb->get_results("
-	    SELECT SUM(LENGTH(post_content)) as sum
-		FROM " . $prefix . "posts
-		WHERE post_date >= '$year-01-01'
-		AND post_date < '$nextyear-01-01'
-		AND post_status = 'publish'");
-    
-    	return ($results[0]->sum);
+    return $wpdb->get_var( 
+        $wpdb->prepare( 
+            "SELECT SUM(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish'", 
+            "$year-01-01",
+            "$next_year-01-01" 
+        )
+    );
 }
 
 /**
@@ -421,7 +413,7 @@ function smyes_get_post_total_length($year) {
 if(!function_exists('smyes_add_menu')) {
 	function smyes_add_menu() {
 	    // Add a submenu to the Dashboard:
-	    add_submenu_page('index.php', 'Year End Stats', 'Year End Stats', 1, __FILE__, 'smyes_displayOptions');
+	    add_submenu_page( 'index.php', __( 'Year End Stats' ), __( 'Year End Stats' ), 'manage_options', __FILE__, 'smyes_displayOptions' );
 	}
 }
 

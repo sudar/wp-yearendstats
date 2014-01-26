@@ -1,5 +1,8 @@
 ## Changelog ##
 
+### 2014-01-26 - v0.5 - (Dev time: 2 hours) ###
+- Fix: Fix all warnings and undefined notices (issue #1)
+
 ### 2013-02-09 - v0.4.1 ###
 - Minor typo fixes
 
