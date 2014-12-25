@@ -5,12 +5,12 @@
 **Tested up to:** 3.8.1  
 **Donate Link:** http://sudarmuthu.com/if-you-wanna-thank-me  
 **Stable tag:** 0.5.1  
-	
-Displays some fancy stats about your blog which you can include in your year end review posts. 
-	
+
+Displays some fancy stats about your blog which you can include in your year end review posts.
+
 ## Description ##
 
-Displays some fancy stats about your blog which you can include in your year end review posts. 
+Displays some fancy stats about your blog which you can include in your year end review posts.
 
 Requires [Open Flash Chart Core Plugin][2].
 
@@ -56,7 +56,7 @@ The following are the features that I am thinking of adding to the Plugin, when 
 
 ## Translation ##
 
-The pot file is available with the Plugin. If you are willing to do translation for the Plugin, 
+The pot file is available with the Plugin. If you are willing to do translation for the Plugin,
 use the pot file to create the .po files for your language and let me know.
 
 ### Credits
@@ -65,7 +65,7 @@ Thanks to Alex King for his [blog stats SQL scripts](http://alexking.org/blog/20
 
 ## Installation ##
 
-Upload the file to your WordPress Plugin directory and then activate it from the Plugins page. 
+Upload the file to your WordPress Plugin directory and then activate it from the Plugins page.
 
 Make sure that even [Open Flash Chart Core Plugin][3] is installed and activated.
 

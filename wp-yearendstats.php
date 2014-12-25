@@ -1,13 +1,13 @@
 <?php
-/*
+/**
 Plugin Name: Year End Stats
 Plugin Script: wp-yearendstats.php
 Plugin URI: http://sudarmuthu.com/wordpress/wp-year-end-stats
-Description: Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a> .
+Description: Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a>.
 Version: 0.5.1
 License: GPL
 Author: Sudar
-Author URI: http://sudarmuthu.com/ 
+Author URI: http://sudarmuthu.com/
 Text Domain: wp-yearendstats
 Domain Path: languages/
 
@@ -15,7 +15,7 @@ Domain Path: languages/
 Check readme file for full release notes
 */
 
-/*  Copyright 2008  Sudar Muthu  (email : sudar@sudarmuthu.com)
+/**  Copyright 2008  Sudar Muthu  (email : sudar@sudarmuthu.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -41,11 +41,11 @@ if (!function_exists('smyes_displayOptions')) {
 
         $results = $wpdb->get_results("select distinct(date_format((post_date), '%Y')) as year from " . $wpdb->prefix . "posts");
         $years = array();
-        
+
         foreach ($results as $result) {
             $years[] = $result->year;
         }
-        
+
         arsort($years);
 
 	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
@@ -60,7 +60,7 @@ if (!function_exists('smyes_displayOptions')) {
 ?>
     <div class="wrap">
         <h2><?php _e( 'Year end stats' , 'wp-yearendstats'); ?></h2>
-        
+
         <form name="smyes_form" method="post">
 
         <h3><?php _e( 'Select year range' , 'wp-yearendstats'); ?></h3>
@@ -109,7 +109,7 @@ if (!function_exists('smyes_displayOptions')) {
                         <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('comments_chart');"></p>
                     </td>
 			    </tr>
-			    <tr>	
+			    <tr>
                     <td>
                         <div id = "avg_post_length_chart"></div>
                         <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('avg_post_length_chart');"></p>
@@ -121,8 +121,8 @@ if (!function_exists('smyes_displayOptions')) {
 			    </tr>
 			</tbody>
 			</table>
-<?php        
-	    }	    
+<?php
+	    }
 	    print ('</div>');
     }
 }
@@ -346,12 +346,12 @@ function save_image(src) {
 function smyes_get_num_posts( $year ) {
     global $wpdb;
     $next_year = $year + 1;
-   
-    return $wpdb->get_var( 
-        $wpdb->prepare( 
-            "SELECT COUNT(*) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'", 
+
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT COUNT(*) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'",
             "$year-01-01",
-            "$next_year-01-01" 
+            "$next_year-01-01"
         )
     );
 }
@@ -365,12 +365,12 @@ function smyes_get_num_posts( $year ) {
 function smyes_get_num_comments( $year ) {
     global $wpdb;
     $next_year = $year + 1;
-   
-    return $wpdb->get_var( 
-        $wpdb->prepare( 
-            "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_date >= %s AND comment_date < %s AND comment_approved = '1'", 
+
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_date >= %s AND comment_date < %s AND comment_approved = '1'",
             "$year-01-01",
-            "$next_year-01-01" 
+            "$next_year-01-01"
         )
     );
 }
@@ -384,12 +384,12 @@ function smyes_get_num_comments( $year ) {
 function smyes_get_post_avg_length( $year ) {
     global $wpdb;
     $next_year = $year + 1;
-   
-    return $wpdb->get_var( 
-        $wpdb->prepare( 
-            "SELECT AVG(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'", 
+
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT AVG(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'",
             "$year-01-01",
-            "$next_year-01-01" 
+            "$next_year-01-01"
         )
     );
 }
@@ -403,12 +403,12 @@ function smyes_get_post_avg_length( $year ) {
 function smyes_get_post_total_length( $year ) {
     global $wpdb;
     $next_year = $year + 1;
-   
-    return $wpdb->get_var( 
-        $wpdb->prepare( 
-            "SELECT SUM(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'", 
+
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT SUM(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'",
             "$year-01-01",
-            "$next_year-01-01" 
+            "$next_year-01-01"
         )
     );
 }
@@ -462,7 +462,7 @@ function smyes_filter_plugin_actions($links, $file) {
     if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
 
     if( $file == $this_plugin ) {
-        $settings_link = '<a href="index.php?page=wp-yearendstats/wp-yearendstats.php">' . _('Manage', 'wp-yearendstats') . '</a>';
+        $settings_link = '<a href="index.php?page=wp-yearendstats/wp-yearendstats.php">' . __('Manage', 'wp-yearendstats') . '</a>';
         array_unshift( $links, $settings_link ); // before other links
     }
     return $links;
