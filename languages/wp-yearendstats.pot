@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Year End Stats package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Year End Stats 0.5.1\n"
+"Project-Id-Version: Year End Stats 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-yearendstats\n"
-"POT-Creation-Date: 2014-01-26 16:07:39+00:00\n"
+"POT-Creation-Date: 2014-12-29 14:04:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,56 +12,50 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: wp-yearendstats.php:62
+#. #-#-#-#-#  wp-yearendstats.pot (Year End Stats 1.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: wp-yearendstats.php:84
+msgid "Year End Stats"
+msgstr ""
+
+#: wp-yearendstats.php:114
 msgid "Year end stats"
 msgstr ""
 
-#: wp-yearendstats.php:66
+#: wp-yearendstats.php:118
 msgid "Select year range"
 msgstr ""
 
-#: wp-yearendstats.php:79
+#: wp-yearendstats.php:131
 msgid " To"
 msgstr ""
 
-#: wp-yearendstats.php:80
+#: wp-yearendstats.php:132
 msgid "And"
 msgstr ""
 
-#: wp-yearendstats.php:93
+#: wp-yearendstats.php:144
 msgid "Get Stats"
 msgstr ""
 
-#: wp-yearendstats.php:105 wp-yearendstats.php:109 wp-yearendstats.php:115
-#: wp-yearendstats.php:119
-msgid "Save as Image"
+#: wp-yearendstats.php:163
+msgid "Number of posts by year"
 msgstr ""
 
-#: wp-yearendstats.php:201
-msgid "Total number of posts per year"
-msgstr ""
-
-#: wp-yearendstats.php:202
-msgid "Total number of comments per year"
+#: wp-yearendstats.php:182
+msgid "Number of comments by year"
 msgstr ""
 
 #: wp-yearendstats.php:203
-msgid "Average length of posts per year"
+msgid "Average length of posts by year"
 msgstr ""
 
-#: wp-yearendstats.php:204
-msgid "Total length of all posts per year"
+#: wp-yearendstats.php:222
+msgid "Total length of posts by year"
 msgstr ""
 
-#: wp-yearendstats.php:422
-msgid "Year End Stats"
-msgstr ""
-
-#: wp-yearendstats.php:465
-msgid "Manage"
-msgstr ""
-#. Plugin Name of the plugin/theme
-msgid "Year End Stats"
+#: wp-yearendstats.php:252
+msgid "Stats"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -69,7 +63,9 @@ msgid "http://sudarmuthu.com/wordpress/wp-year-end-stats"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a> ."
+msgid ""
+"Displays fancy stats about your blog which you can include in your year end "
+"review posts."
 msgstr ""
 
 #. Author of the plugin/theme
