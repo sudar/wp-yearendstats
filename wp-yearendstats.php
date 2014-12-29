@@ -3,8 +3,8 @@
 Plugin Name: Year End Stats
 Plugin Script: wp-yearendstats.php
 Plugin URI: http://sudarmuthu.com/wordpress/wp-year-end-stats
-Description: Displays some fancy stats about your blog which you can include in your year end review posts. Based on the queries by <a href = 'http://alexking.org/blog/2007/01/01/sql-for-blog-stats'>Alex King</a>.
-Version: 0.5.1
+Description: Displays fancy stats about your blog which you can include in your year end review posts.
+Version: 1.0
 License: GPL
 Author: Sudar
 Author URI: http://sudarmuthu.com/
@@ -32,14 +32,66 @@ Check readme file for full release notes
 */
 
 /**
- * Display Options page
+ * Year End Stats Plugin
  */
-if (!function_exists('smyes_displayOptions')) {
-    function smyes_displayOptions() {
+class Year_End_Stats_Plugin {
+    function __construct() {
+        $this->includes();
+        $this->setup_hooks();
+    }
 
+    /**
+     * Include additional files.
+     */
+    public function includes() {
+        require_once plugin_dir_path( __FILE__ ) . '/includes/stats.php';
+        require_once plugin_dir_path( __FILE__ ) . '/includes/shortcode.php';
+    }
+
+    /**
+     * Setup hooks.
+     */
+    public function setup_hooks() {
+        add_action( 'init', array( $this, 'do_localization' ) );
+
+        add_action( 'admin_init', array( $this, 'on_admin_init' ) );
+        add_action( 'admin_menu', array( $this, 'add_menu' ) );
+        add_filter( 'plugin_action_links', array( $this, 'plugin_row_action' ), 10, 2 );
+
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+    }
+
+    /**
+     * Do localization.
+     */
+    public function do_localization() {
+        $translations = dirname( plugin_basename( __FILE__ ) ) . '/languages/' ;
+        load_plugin_textdomain( 'wp-yearendstats', FALSE, $translations );
+    }
+
+    /**
+     * Admin init callback.
+     */
+    public function on_admin_init() {
+        $postfix = ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
+        wp_register_script( 'flot', plugins_url( 'assets/js/vendor/flot/jquery.flot', __FILE__ ) . $postfix . '.js', array( 'jquery' ), '0.8.3', true );
+    }
+
+    /**
+     * Add menu to the panel
+     */
+    public function add_menu() {
+        $page_hook_suffix = add_submenu_page( 'index.php', __( 'Year End Stats' , 'wp-yearendstats'), __( 'Year End Stats' , 'wp-yearendstats'), 'manage_options', 'year-end-stats',  array( $this, 'display_dashboard_page' ) );
+        add_action( 'admin_print_scripts-' . $page_hook_suffix, array( $this, 'enqueue_admin_script' ) );
+    }
+
+    /**
+     * Display Stats page.
+     */
+    public function display_dashboard_page() {
         global $wpdb;
 
-        $results = $wpdb->get_results("select distinct(date_format((post_date), '%Y')) as year from " . $wpdb->prefix . "posts");
+        $results = $wpdb->get_results("select distinct(date_format((post_date), '%Y')) as year from $wpdb->posts");
         $years = array();
 
         foreach ($results as $result) {
@@ -49,13 +101,13 @@ if (!function_exists('smyes_displayOptions')) {
         arsort($years);
 
 	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
-            $year_1 = $_POST['year_1'];
-            $year_2 = $_POST['year_2'];
-            $range = $_POST['range'];
+            $year_1 = absint( $_POST['year_1'] );
+            $year_2 = absint( $_POST['year_2'] );
+            $range  = sanitize_text_field( $_POST['range'] );
         } else {
             $year_1 = 0;
             $year_2 = 0;
-            $range = 0;
+            $range  = 'to';
         }
 ?>
     <div class="wrap">
@@ -89,10 +141,8 @@ if (!function_exists('smyes_displayOptions')) {
         }
 ?>
         </select>
-        <p style="border:0;" class = "submit">
-        <input type="submit" value="<?php _e( 'Get Stats', 'wp-yearendstats'); ?> &raquo;">
-        </p>
-		<input type="hidden" name="smyes_action" value="getstats" />
+        <?php submit_button( esc_html__( 'Get Stats', 'wp-yearendstats' ) ); ?>
+		<input type="hidden" name="smyes_action" value="getstats">
         </form>
 <?php
 	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
@@ -101,22 +151,82 @@ if (!function_exists('smyes_displayOptions')) {
 	        <tbody>
 		        <tr valign="top">
                     <td>
-                        <div id = "posts_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('posts_chart');"></p>
+                        <div id = "posts_chart">
+<?php
+        $atts = array(
+            'type'       => 'post_num',
+            'post_type'  => 'post',
+            'status'     => 'publish',
+            'start_year' => $year_1,
+            'end_year'   => $year_2,
+            'range'      => $range,
+            'title'      => esc_html__( 'Number of posts by year', 'wp-yearendstats' ),
+            'width'      => 300,
+            'height'     => 300,
+        );
+        $post_stats = new \SM\YearEndStats\Stats( $atts );
+        echo $post_stats->generate_graph();
+?>
+                        </div>
                     </td>
                     <td>
-                        <div id = "comments_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('comments_chart');"></p>
+                        <div id = "comments_chart">
+<?php
+        $atts = array(
+            'type'       => 'comment_num',
+            'post_type'  => 'post',
+            'status'     => 'publish',
+            'start_year' => $year_1,
+            'end_year'   => $year_2,
+            'range'      => $range,
+            'title'      => esc_html__( 'Number of comments by year', 'wp-yearendstats' ),
+            'width'      => 300,
+            'height'     => 300,
+        );
+        $post_stats = new \SM\YearEndStats\Stats( $atts );
+        echo $post_stats->generate_graph();
+?>
+                        </div>
                     </td>
 			    </tr>
 			    <tr>
                     <td>
-                        <div id = "avg_post_length_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('avg_post_length_chart');"></p>
+                        <div id="avg_post_length_chart">
+<?php
+        $atts = array(
+            'type'       => 'post_avg_length',
+            'post_type'  => 'post',
+            'status'     => 'publish',
+            'start_year' => $year_1,
+            'end_year'   => $year_2,
+            'range'      => $range,
+            'title'      => esc_html__( 'Average length of posts by year', 'wp-yearendstats' ),
+            'width'      => 300,
+            'height'     => 300,
+        );
+        $post_stats = new \SM\YearEndStats\Stats( $atts );
+        echo $post_stats->generate_graph();
+?>
+                        </div>
                     </td>
                     <td>
-                        <div id = "total_post_length_chart"></div>
-                        <p style="border:0;" class = "submit"><input type="button" value="<?php _e( 'Save as Image' , 'wp-yearendstats'); ?>" onclick="save_image('total_post_length_chart');"></p>
+                        <div id = "total_post_length_chart">
+<?php
+        $atts = array(
+            'type'       => 'post_total_length',
+            'post_type'  => 'post',
+            'status'     => 'publish',
+            'start_year' => $year_1,
+            'end_year'   => $year_2,
+            'range'      => $range,
+            'title'      => esc_html__( 'Total length of posts by year', 'wp-yearendstats' ),
+            'width'      => 300,
+            'height'     => 300,
+        );
+        $post_stats = new \SM\YearEndStats\Stats( $atts );
+        echo $post_stats->generate_graph();
+?>
+                        </div>
                     </td>
 			    </tr>
 			</tbody>
@@ -125,354 +235,44 @@ if (!function_exists('smyes_displayOptions')) {
 	    }
 	    print ('</div>');
     }
-}
 
-/**
- * Enqueue Scripts
- */
-function smyes_enqueue_scripts() {
+    /**
+     * Adds the settings link in the Plugin page.
+     *
+     * Based on http://striderweb.com/nerdaphernalia/2008/06/wp-use-action-links/
+     * @staticvar string $this_plugin
+     * @param string $links
+     * @param string $file
+     */
+    function plugin_row_action($links, $file) {
+        static $this_plugin;
+        if( ! $this_plugin ) $this_plugin = plugin_basename( __FILE__ );
 
-    // Load localization domain
-    $translations = dirname( plugin_basename( __FILE__ ) ) . '/languages/' ;
-    load_plugin_textdomain( 'wp-yearendstats', FALSE, $translations );
-
-    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
-       wp_enqueue_script('json');
-       wp_enqueue_script('swfobject');
-    }
-}
-
-/**
- * Print scripts
- */
-if (!function_exists('smyes_print_scripts')) {
-    function smyes_print_scripts() {
-
-	    if ( isset( $_POST['smyes_action'] ) && $_POST['smyes_action'] == 'getstats' ) {
-            $year_1 = $_POST['year_1'];
-            $year_2 = $_POST['year_2'];
-            $range = $_POST['range'];
-
-            // Opne Flash Chart class is available through open flash chart core Plugin
-            $chart_1 = new open_flash_chart();
-            $chart_2 = new open_flash_chart();
-            $chart_3 = new open_flash_chart();
-            $chart_4 = new open_flash_chart();
-
-            $year_range = array();
-
-            switch ($range) {
-                case "and":
-                    $year_range [] = (string)$year_1;
-                    if ($year_1 != $year_2) {
-                        $year_range [] = (string)$year_2;
-                    }
-                    break;
-
-                case "to":
-                    if ($year_1 > $year_2){
-                        $tmp = $year_2;
-                        $year_2 = $year_1;
-                        $year_1 = $tmp;
-                    }
-                    for ($i = $year_1; $i <= $year_2; $i++ ) {
-                        $year_range [] = (string)$i;
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-            $posts_values = array();
-            $comments_values = array();
-            $avg_post_length  = array();
-            $total_post_length = array();
-
-            foreach ($year_range as $year) {
-
-                $posts_values [] = (int)smyes_get_num_posts($year);
-                $comments_values [] = (int)smyes_get_num_comments($year);
-
-                $avg_post_length[] = (float)smyes_get_post_avg_length($year);
-                $total_post_length[] = (int)smyes_get_post_total_length($year);
-            }
-
-            // titles
-            $title_1 = new title( __( 'Total number of posts per year' , 'wp-yearendstats') );
-            $title_2 = new title( __( 'Total number of comments per year' , 'wp-yearendstats') );
-            $title_3 = new title( __( 'Average length of posts per year' , 'wp-yearendstats') );
-            $title_4 = new title( __( 'Total length of all posts per year' , 'wp-yearendstats') );
-
-            $chart_1->set_title( $title_1 );
-            $chart_2->set_title( $title_2 );
-            $chart_3->set_title( $title_3 );
-            $chart_4->set_title( $title_4 );
-
-            // Bars
-            $posts_bar = new bar();
-            $posts_bar->set_values( $posts_values);
-            $posts_bar->set_tooltip( "#val# posts in #x_label#" );
-            $chart_1->add_element( $posts_bar );
-
-            $comments_bar = new bar();
-            $comments_bar->set_values( $comments_values);
-            $comments_bar->set_tooltip( "#val# comments in #x_label#" );
-            $chart_2->add_element( $comments_bar );
-
-            $avg_post_length_bar = new bar();
-            $avg_post_length_bar->set_values( $avg_post_length);
-            $avg_post_length_bar->set_tooltip( "#val# characters in #x_label#" );
-            $chart_3->add_element( $avg_post_length_bar );
-
-            $total_post_length_bar = new bar();
-            $total_post_length_bar->set_values( $total_post_length);
-            $total_post_length_bar->set_tooltip( "#val# characters in #x_label#" );
-            $chart_4->add_element( $total_post_length_bar );
-
-            // X Axis
-            $x_labels = new x_axis_labels();
-            $x_labels->set_vertical();
-            $x_labels->set_labels($year_range);
-
-            $x_axis = new x_axis();
-            $x_axis->set_labels($x_labels);
-
-            $chart_1->set_x_axis($x_axis);
-            $chart_2->set_x_axis($x_axis);
-            $chart_3->set_x_axis($x_axis);
-            $chart_4->set_x_axis($x_axis);
-
-            // Y Axis
-            $y_axis_1 = new y_axis();
-            $y_axis_2 = new y_axis();
-            $y_axis_3 = new y_axis();
-            $y_axis_4 = new y_axis();
-
-            $min = min($posts_values);
-            $max = max($posts_values);
-            $steps = round($max / 10, 0);
-            $y_axis_1->set_range(0, $max, $steps);
-
-            $min = min($comments_values);
-            $max = max($comments_values);
-            $steps = round($max / 10, 0);
-            $y_axis_2->set_range(0, $max, $steps);
-
-            $min = round(min($avg_post_length), 0);
-            $max = round(max($avg_post_length), 0);
-            $steps = round($max / 10, 0);
-            $y_axis_3->set_range(0, $max, $steps);
-
-            $min = min($total_post_length);
-            $max = max($total_post_length);
-            $steps = round($max / 10, 0);
-            $y_axis_4->set_range(0, $max, $steps);
-
-            $chart_1->set_y_axis($y_axis_1);
-            $chart_2->set_y_axis($y_axis_2);
-            $chart_3->set_y_axis($y_axis_3);
-            $chart_4->set_y_axis($y_axis_4);
-
-            $include_url = get_option("SM_OFC_INC_URL");
-?>
-<script type="text/javascript">
-swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "posts_chart", "350", "250", "9.0.0", "expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "posts_chart", "loading":"Loading data..."}, {"menu":"false"});
-swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "comments_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "comments_chart", "loading":"Loading data..."}, {"menu":"false"});
-swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "avg_post_length_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "avg_post_length_chart", "loading":"Loading data..."}, {"menu":"false"});
-swfobject.embedSWF("<?php echo $include_url; ?>open-flash-chart.swf", "total_post_length_chart", "350", "250", "9.0.0","expressInstall.swf", {"get-data":"open_flash_chart_data_2", "id": "total_post_length_chart", "loading":"Loading data..."}, {"menu":"false"});
-</script>
-
-<script type="text/javascript">
-
-/**
- * Provides data for charts
- */
-function open_flash_chart_data_2(id)
-{
-    switch (id) {
-        case "posts_chart":
-            var data = <?php echo $chart_1->toPrettyString(); ?>;
-            return JSON.stringify(data);
-            break;
-        case "comments_chart":
-            var data = <?php echo $chart_2->toPrettyString(); ?>;
-            return JSON.stringify(data);
-            break;
-        case "avg_post_length_chart":
-            var data = <?php echo $chart_3->toPrettyString(); ?>;
-            return JSON.stringify(data);
-            break;
-        case "total_post_length_chart":
-            var data = <?php echo $chart_4->toPrettyString(); ?>;
-            return JSON.stringify(data);
-            break;
-        default:
-            break;
-    }
-}
-
-/**
- * Utility Function
- */
-function findSWF(movieName) {
-  if (navigator.appName.indexOf("Microsoft")!= -1) {
-    return window[movieName];
-  } else {
-    return document[movieName];
-  }
-}
-
-/**
- * Save chart as Image
- */
-function save_image(src) {
-    // TODO, save image directly, instead of opening in a new window
-    var img_win = window.open('', 'Charts: Export as Image');
-    img_win.document.write("<html><head><title>Charts: Export as Image<\/title><\/head><body>" + "<img src='data:image/png;base64," + document.getElementById(src).get_img_binary() + "' />" + "<\/body><\/html>");
-}
-</script>
-
-<?php
+        if( $file == $this_plugin ) {
+            $settings_link = '<a href="index.php?page=year-end-stats">' . esc_html__( 'Stats', 'wp-yearendstats' ) . '</a>';
+            array_unshift( $links, $settings_link ); // before other links
         }
+        return $links;
+    }
+
+    /**
+     * Enqueue script in admin page.
+     */
+    public function enqueue_admin_script() {
+        //TODO: Include it only when the page is posted.
+        wp_enqueue_script( 'flot' );
+    }
+
+    /**
+     * Enqueue scripts.
+     */
+    public function enqueue_scripts() {
+        //TODO: Include it only when a shortocode is used
+        $postfix = ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
+        wp_enqueue_script( 'flot', plugins_url( 'assets/js/vendor/flot/jquery.flot', __FILE__ ) . $postfix . '.js', array( 'jquery' ), '0.8.3' , true );
     }
 }
 
-/**
- * Get the Number of posts in a year.
- *
- * @param Number $year
- * @return Number
- */
-function smyes_get_num_posts( $year ) {
-    global $wpdb;
-    $next_year = $year + 1;
-
-    return $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT COUNT(*) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'",
-            "$year-01-01",
-            "$next_year-01-01"
-        )
-    );
-}
-
-/**
- * Get the number of comments in a year.
- *
- * @param Number $year
- * @return Number
- */
-function smyes_get_num_comments( $year ) {
-    global $wpdb;
-    $next_year = $year + 1;
-
-    return $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT COUNT(*) FROM $wpdb->comments WHERE comment_date >= %s AND comment_date < %s AND comment_approved = '1'",
-            "$year-01-01",
-            "$next_year-01-01"
-        )
-    );
-}
-
-/**
- * Get the average length of posts in a year
- *
- * @param Number $year
- * @return Number
- */
-function smyes_get_post_avg_length( $year ) {
-    global $wpdb;
-    $next_year = $year + 1;
-
-    return $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT AVG(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'",
-            "$year-01-01",
-            "$next_year-01-01"
-        )
-    );
-}
-
-/**
- * Get the total length of posts in a year
- *
- * @param unknown_type $year
- * @return unknown
- */
-function smyes_get_post_total_length( $year ) {
-    global $wpdb;
-    $next_year = $year + 1;
-
-    return $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT SUM(LENGTH(post_content)) FROM $wpdb->posts WHERE post_date >= %s AND post_date < %s AND post_status = 'publish' AND post_type = 'post'",
-            "$year-01-01",
-            "$next_year-01-01"
-        )
-    );
-}
-
-/**
- * Add menu to the panel
- */
-if(!function_exists('smyes_add_menu')) {
-	function smyes_add_menu() {
-	    // Add a submenu to the Dashboard:
-	    add_submenu_page( 'index.php', __( 'Year End Stats' , 'wp-yearendstats'), __( 'Year End Stats' , 'wp-yearendstats'), 'manage_options', __FILE__, 'smyes_displayOptions' );
-	}
-}
-
-/**
- * After all plugins are loaded
- */
-if (!function_exists('smyes_plugins_loaded')) {
-    function smyes_plugins_loaded() {
-        // hook the admin notices action
-        add_action( 'admin_notices', 'smyes_check_dependency' );
-    }
-}
-
-/**
- * Check Plugin dependency
- */
-if (!function_exists("smyes_check_dependency")) {
-    function smyes_check_dependency() {
-        // if Open Flash Charts API Core plugin is not installed then de-activate
-        if (!class_exists('open_flash_chart')) {
-            echo "<div class = 'updated'><p>ERROR! <strong>WP Year End Stats</strong> Plugin requires <a href = 'http://sudarmuthu.com/wordpress/open-flash-chart-core'>Open Flash Chart Core Plugin</a>. Please install it and then activate <strong>WP Year End Stats</strong> Plugin.</p></div>";
-            deactivate_plugins('wp-yearendstats/wp-yearendstats.php'); // Deactivate ourself
-
-            // add deactivated Plugin to the recently activated list
-            $deactivated = array();
-            $deactivated["wp-yearendstats/wp-yearendstats.php"] = time();
-            update_option('recently_activated', $deactivated + (array)get_option('recently_activated'));
-        }
-    }
-}
-
-/**
- * Adds the settings link in the Plugin page. Based on http://striderweb.com/nerdaphernalia/2008/06/wp-use-action-links/
- * @staticvar <type> $this_plugin
- * @param <type> $links
- * @param <type> $file
- */
-function smyes_filter_plugin_actions($links, $file) {
-    static $this_plugin;
-    if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
-
-    if( $file == $this_plugin ) {
-        $settings_link = '<a href="index.php?page=wp-yearendstats/wp-yearendstats.php">' . __('Manage', 'wp-yearendstats') . '</a>';
-        array_unshift( $links, $settings_link ); // before other links
-    }
-    return $links;
-}
-add_filter( 'plugin_action_links', 'smyes_filter_plugin_actions', 10, 2 );
-
-add_action('admin_menu', 'smyes_add_menu');
-add_action('admin_head', 'smyes_print_scripts', 1);
-add_action('init', 'smyes_enqueue_scripts');
-
-// Start this plugin once all other files and plugins are fully loaded
-add_action( 'plugins_loaded', 'smyes_plugins_loaded');
+// Bootstrap everything.
+new Year_End_Stats_Plugin;
 ?>

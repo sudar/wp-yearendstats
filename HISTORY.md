@@ -1,5 +1,10 @@
 ## Changelog ##
 
+### 2014-12-29 - v1.0 - (Dev time: 10 hour) ###
+- New: Support for shortcodes
+- New: Removed dependency on Open Flash Charts plugin.
+- New: Uses Flot for generating the graphs.
+
 ### 2014-01-26 - v0.5.1 - (Dev time: 0.5 hour) ###
 - Fix: There was some problem in the version. This is just to bump up version number
 
